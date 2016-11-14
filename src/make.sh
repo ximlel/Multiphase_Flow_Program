@@ -14,11 +14,11 @@ read
 #./hydrocode.out Sod_test Sod_test/Sod_test	1 1_Riemann_exact free
 #./hydrocode.out Sod_test Sod_test/Sod_test	1 2_GRP		  free
 #./hydrocode.out Sod_10_test Sod_10_test/Sod_10_test_ROE 2 1_Roe		  Sod
-#./hydrocode.out Sod_10_test Sod_10_test/Sod_10_test	 2 1_Riemann_exact Sod
+./hydrocode.out Sod_10_test Sod_10_test/Sod_10_test	 2 1_Riemann_exact Sod
 #./hydrocode.out Sod_10_test Sod_10_test/Sod_10_test	 2 2_GRP		  Sod
 
 #./hydrocode.out odd_even odd_even/odd_even_Roe 2 1_Roe 	  odd_even
-./hydrocode.out odd_even odd_even/odd_even	2 1_Riemann_exact Sod odd_even
+#./hydrocode.out odd_even odd_even/odd_even	2 1_Riemann_exact Sod odd_even
 
 #./hydrocode.out NEW_TEST_OBLIQUE NEW_TEST_OBLIQUE/NEW_TEST_OBLIQUE_Roe	2 1_Roe			oblique_periodic
 #./hydrocode.out NEW_TEST_OBLIQUE NEW_TEST_OBLIQUE/NEW_TEST_OBLIQUE	2 1_Riemann_exact	oblique_periodic

@@ -66,39 +66,12 @@ void flux_copy_ifv2cv(struct i_f_var ifv, struct cell_var *cv, int k, int j)
 	cv->gamma_p[k][j] = ifv.gamma;
 
 
-	cv->F_rho_star[k][j] = ifv.F_rho_star;
-	cv->F_e_star[k][j]   = ifv.F_e_star;
-	cv->F_u_star[k][j]   = ifv.F_u_star;
-	if (dim > 1)
-		cv->F_v_star[k][j] = ifv.F_v_star;
-	if (dim > 2)
-		cv->F_w_star[k][j] = ifv.F_w_star;
-	if ((int)config[2] == 2)
-		cv->F_phi_star[k][j] = ifv.F_phi_star;
-	if (!isinf(config[60]))
-		cv->F_gamma_star[k][j] = ifv.F_gamma_star;
-	cv->F_rho_add_c[k][j] = ifv.F_rho_add_c;
-	cv->F_e_add_c[k][j]   = ifv.F_e_add_c;
-	cv->F_u_add_c[k][j]   = ifv.F_u_add_c;
-	if (dim > 1)
-		cv->F_v_add_c[k][j] = ifv.F_v_add_c;
-	if (dim > 2)
-		cv->F_w_add_c[k][j] = ifv.F_w_add_c;
-	if ((int)config[2] == 2)
-		cv->F_phi_add_c[k][j] = ifv.F_phi_add_c;
-	if (!isinf(config[60]))
-		cv->F_gamma_add_c[k][j] = ifv.F_gamma_add_c;
-	cv->F_rho_minus_c[k][j] = ifv.F_rho_minus_c;
-	cv->F_e_minus_c[k][j]   = ifv.F_e_minus_c;
-	cv->F_u_minus_c[k][j]   = ifv.F_u_minus_c;
-	if (dim > 1)
-		cv->F_v_minus_c[k][j] = ifv.F_v_minus_c;
-	if (dim > 2)
-		cv->F_w_minus_c[k][j] = ifv.F_w_minus_c;
-	if ((int)config[2] == 2)
-		cv->F_phi_minus_c[k][j] = ifv.F_phi_minus_c;
-	if (!isinf(config[60]))
-		cv->F_gamma_minus_c[k][j] = ifv.F_gamma_minus_c;
+	cv->RHO_star[k][j] = ifv.RHO_star;
+	cv->P_star[k][j]   = ifv.P_star;
+	cv->RHO_add_c[k][j] = ifv.RHO_add_c;
+	cv->P_add_c[k][j]   = ifv.P_add_c;
+	cv->RHO_minus_c[k][j] = ifv.RHO_minus_c;
+	cv->P_minus_c[k][j]   = ifv.P_minus_c;
 
 	cv->u_star[k][j]  = ifv.u_star;
 	cv->u_minus_c[k][j] = ifv.u_minus_c;

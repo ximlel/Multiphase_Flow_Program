@@ -117,124 +117,27 @@ void Riemann_exact_scheme(struct i_f_var * ifv, struct i_f_var * ifv_R)
 	rho_star_R = star[2];
 	p_star = star[3];
 
+	ifv->RHO_minus_c = rho_star_L;
+	ifv->P_minus_c   = p_star;
+	ifv->RHO_star = rho_star_R;
+	ifv->P_star   = p_star;					
+	ifv->RHO_add_c = rho_mid;
+	ifv->P_add_c   = p_mid;
+
 	if(ifv->u_minus_c > 0.0)
-		ifv->u_minus_c = 0.0;
-	if (dim == 1)
 		{
-			ifv->F_rho_minus_c = ifv->RHO*ifv->U;
-			ifv->F_u_minus_c   = ifv->F_rho_minus_c*ifv->U + ifv->P;
-			ifv->F_e_minus_c   = (gamma/(gamma-1.0))*ifv->P/ifv->RHO + 0.5*ifv->U*ifv->U;
-			ifv->F_e_minus_c  *= ifv->F_rho_minus_c;
-
-			u_star = star[1];
-			ifv->F_rho_star = rho_star_L*u_star;
-			ifv->F_u_star   = ifv->F_rho_star*u_star + p_star;
-			ifv->F_e_star   = (gamma/(gamma-1.0))*p_star/rho_star_L + 0.5*u_star*u_star;
-			ifv->F_e_star  *= ifv->F_rho_star;
-					
-			ifv->F_rho_add_c = rho_star_R*u_star;
-			ifv->F_u_add_c   = ifv->F_rho_add_c*u_star + p_star;
-			ifv->F_e_add_c   = (gamma/(gamma-1.0))*p_star/rho_star_R + 0.5*u_star*u_star;
-			ifv->F_e_add_c  *= ifv->F_rho_add_c;
+			ifv->u_minus_c = 0.0;
+			ifv->RHO_minus_c = rho_mid;
+			ifv->P_minus_c   = p_mid;
 		}
-	if (dim == 2)
+	if(ifv->u_star > 0.0)
 		{
-			ifv->F_rho_minus_c = ifv->RHO*(ifv->U*n_x + ifv->V*n_y);
-			ifv->F_u_minus_c   = ifv->F_rho_minus_c*ifv->U + ifv->P*n_x;
-			ifv->F_v_minus_c   = ifv->F_rho_minus_c*ifv->V + ifv->P*n_y;
-			ifv->F_e_minus_c   = (gamma/(gamma-1.0))*ifv->P/ifv->RHO + 0.5*(ifv->U*ifv->U + ifv->V*ifv->V);
-			ifv->F_e_minus_c  *= ifv->F_rho_minus_c;
-
-			qt_star_L = -ifv->U*n_y + ifv->V*n_x;
-			u_star    = star[1]*n_x - qt_star_L*n_y;
-			v_star    = star[1]*n_y + qt_star_L*n_x;
-			ifv->F_rho_star = rho_star_L*(u_star*n_x + v_star*n_y);
-			ifv->F_u_star   = ifv->F_rho_star*u_star + p_star*n_x;
-			ifv->F_v_star   = ifv->F_rho_star*v_star + p_star*n_y;
-			ifv->F_e_star   = (gamma/(gamma-1.0))*p_star/rho_star_L + 0.5*(u_star*u_star + v_star*v_star);
-			ifv->F_e_star  *= ifv->F_rho_star;
-
-			qt_star_R = -ifv_R->U*n_y + ifv_R->V*n_x;
-			u_star    = star[1]*n_x - qt_star_R*n_y;
-			v_star    = star[1]*n_y + qt_star_R*n_x;
-			ifv->F_rho_add_c = rho_star_R*(u_star*n_x + v_star*n_y);
-			ifv->F_u_add_c   = ifv->F_rho_add_c*u_star + p_star*n_x;
-			ifv->F_v_add_c   = ifv->F_rho_add_c*v_star + p_star*n_y;
-			ifv->F_e_add_c   = (gamma/(gamma-1.0))*p_star/rho_star_R + 0.5*(u_star*u_star + v_star*v_star);
-			ifv->F_e_add_c  *= ifv->F_rho_star;
-		}
-	if ((int)config[2] == 2)
-		{
-			ifv->F_phi_minus_c = ifv->F_rho_minus_c * ifv->PHI;
-			ifv->F_phi_star    = ifv->F_rho_star * ifv->PHI;
-			ifv->F_phi_add_c   = ifv->F_rho_star * ifv_R->PHI;
-		}
-	if (!isinf(config[60]))
-		{				
-			ifv->F_gamma_minus_c = ifv->F_rho_minus_c * gamma;
-			ifv->F_gamma_star    = ifv->F_rho_star * gamma;
-			ifv->F_gamma_add_c   = ifv->F_rho_add_c * gamma;
-		}
-
-	double ratio;
-	if(ifv->u_star < 0.0)
-		{
-			ratio = ifv->u_star/ifv->u_minus_c;
-
-			ifv->F_rho_star = (1.0-ratio)*ifv->F_rho_star + ratio*ifv->F_rho_minus_c;
-			ifv->F_u_star   = (1.0-ratio)*ifv->F_u_star   + ratio*ifv->F_u_minus_c;
-			ifv->F_e_star   = (1.0-ratio)*ifv->F_e_star   + ratio*ifv->F_e_minus_c;
-			if (dim > 1)
-				ifv->F_v_star   = (1.0-ratio)*ifv->F_v_star   + ratio*ifv->F_v_minus_c;
-			if ((int)config[2] == 2)
-				ifv->F_phi_star = (1.0-ratio)*ifv->F_phi_star + ratio*ifv->F_phi_minus_c;					
-			if (!isinf(config[60]))
-				ifv->F_gamma_star = (1.0-ratio)*ifv->F_gamma_star + ratio*ifv->F_gamma_minus_c;
-		}
-	else
-		{					
 			ifv->u_star = 0.0;
-
-			ifv->F_rho_star = ifv->F_rho;
-			ifv->F_u_star   = ifv->F_u;
-			ifv->F_e_star   = ifv->F_e;
-			if (dim > 1)
-				ifv->F_v_star   = ifv->F_v;
-			if ((int)config[2] == 2)
-				ifv->F_phi_star = ifv->F_phi;					
-			if (!isinf(config[60]))
-				ifv->F_gamma_star = ifv->F_gamma;	
+			ifv->RHO_star = rho_mid;
+			ifv->P_star   = p_mid;
 		}
-
-
-	if(ifv->u_add_c < 0.0)
-		{
-			ratio = ifv->u_add_c/ifv->u_star;
-
-			ifv->F_rho_add_c = (1.0-ratio)*ifv->F_rho_add_c + ratio*ifv->F_rho_star;
-			ifv->F_u_add_c   = (1.0-ratio)*ifv->F_u_add_c   + ratio*ifv->F_u_star;
-			ifv->F_e_add_c   = (1.0-ratio)*ifv->F_e_add_c   + ratio*ifv->F_e_star;
-			if (dim > 1)
-				ifv->F_v_add_c   = (1.0-ratio)*ifv->F_v_add_c   + ratio*ifv->F_v_star;
-			if ((int)config[2] == 2)
-				ifv->F_phi_add_c = (1.0-ratio)*ifv->F_phi_add_c + ratio*ifv->F_phi_star;					
-			if (!isinf(config[60]))
-				ifv->F_gamma_add_c = (1.0-ratio)*ifv->F_gamma_add_c + ratio*ifv->F_gamma_star;
-		}
-	else
-		{					
-			ifv->u_add_c = 0.0;
-
-			ifv->F_rho_add_c = ifv->F_rho;
-			ifv->F_u_add_c   = ifv->F_u;
-			ifv->F_e_add_c   = ifv->F_e;
-			if (dim > 1)
-				ifv->F_v_add_c   = ifv->F_v;
-			if ((int)config[2] == 2)
-				ifv->F_phi_add_c = ifv->F_phi;					
-			if (!isinf(config[60]))
-				ifv->F_gamma_add_c = ifv->F_gamma;
-		}
+	if(ifv->u_add_c > 0.0)
+		ifv->u_add_c = 0.0;
 
 	
 	ifv->RHO = rho_mid;

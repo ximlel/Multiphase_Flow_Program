@@ -286,39 +286,12 @@ int interface_var_init
 			if ((int)config[2] == 2)
 				ifv->F_phi = 0.0;
 
-			ifv->F_rho_star = ifv->F_rho;
-			ifv->F_u_star = ifv->P*ifv->n_x;
-			if (dim > 1)
-				ifv->F_v_star = ifv->F_v;
-			if (dim > 2)
-				ifv->F_w_star = ifv->F_w;
-			ifv->F_e_star = ifv->F_e;
-			if (!isinf(config[60]))
-				ifv->F_gamma_star = ifv->F_gamma;
-			if ((int)config[2] == 2)
-				ifv->F_phi_star = ifv->F_phi;
-			ifv->F_rho_minus_c = ifv->F_rho;
-			ifv->F_u_minus_c = ifv->P*ifv->n_x;
-			if (dim > 1)
-				ifv->F_v_minus_c = ifv->F_v;
-			if (dim > 2)
-				ifv->F_w_minus_c = ifv->F_w;
-			ifv->F_e_minus_c = ifv->F_e;
-			if (!isinf(config[60]))
-				ifv->F_gamma_minus_c = ifv->F_gamma;
-			if ((int)config[2] == 2)
-				ifv->F_phi_minus_c = ifv->F_phi;
-			ifv->F_rho_add_c = ifv->F_rho;
-			ifv->F_u_add_c = ifv->P*ifv->n_x;
-			if (dim > 1)
-				ifv->F_v_add_c = ifv->F_v;
-			if (dim > 2)
-				ifv->F_w_add_c = ifv->F_w;
-			ifv->F_e_add_c = ifv->F_e;
-			if (!isinf(config[60]))
-				ifv->F_gamma_add_c = ifv->F_gamma;
-			if ((int)config[2] == 2)
-				ifv->F_phi_add_c = ifv->F_phi;
+			ifv->RHO_star = ifv->RHO;
+			ifv->P_star   = ifv->P;
+			ifv->RHO_minus_c = ifv->RHO;
+			ifv->P_minus_c   = ifv->P;
+			ifv->RHO_add_c = ifv->RHO;
+			ifv->P_add_c   = ifv->P;
 
 			ifv->F_delta_e = 0.0;
 			ifv->u_star = 0.0;
