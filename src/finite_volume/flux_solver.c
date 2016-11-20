@@ -117,24 +117,34 @@ void Riemann_exact_scheme(struct i_f_var * ifv, struct i_f_var * ifv_R)
 	rho_star_R = star[2];
 	p_star = star[3];
 
-	ifv->RHO_minus_c = rho_star_L;
-	ifv->P_minus_c   = p_star;
-	ifv->RHO_star = rho_star_R;
-	ifv->P_star   = p_star;					
-	ifv->RHO_add_c = rho_mid;
-	ifv->P_add_c   = p_mid;
+	ifv->RHO_minus_c  = rho_star_L;
+	ifv->P_minus_c    = p_star;
+	ifv->U_qt_minus_c = 0.0;
+	ifv->V_qt_minus_c = 0.0;
+	ifv->RHO_star     = rho_star_R;
+	ifv->P_star       = p_star;
+	ifv->U_qt_star    = -(-ifv_R->U*n_y + ifv_R->V*n_x)*n_y+(-ifv->U  *n_y + ifv->V  *n_x)*n_y;
+	ifv->V_qt_star    =  (-ifv_R->U*n_y + ifv_R->V*n_x)*n_x-(-ifv->U  *n_y + ifv->V  *n_x)*n_x;				
+	ifv->RHO_add_c    = rho_mid;
+	ifv->P_add_c      = p_mid;
+	ifv->U_qt_add_c   = -mid_qt*n_y+(-ifv->U  *n_y + ifv->V  *n_x)*n_y;
+	ifv->V_qt_add_c   =  mid_qt*n_x-(-ifv->U  *n_y + ifv->V  *n_x)*n_x;
 
 	if(ifv->u_minus_c > 0.0)
 		{
 			ifv->u_minus_c = 0.0;
 			ifv->RHO_minus_c = rho_mid;
 			ifv->P_minus_c   = p_mid;
+	                ifv->U_qt_minus_c = -mid_qt*n_y+(-ifv->U  *n_y + ifv->V  *n_x)*n_y;
+	                ifv->V_qt_minus_c =  mid_qt*n_x-(-ifv->U  *n_y + ifv->V  *n_x)*n_x;
 		}
 	if(ifv->u_star > 0.0)
 		{
 			ifv->u_star = 0.0;
 			ifv->RHO_star = rho_mid;
 			ifv->P_star   = p_mid;
+	                ifv->U_qt_star = -mid_qt*n_y+(-ifv->U  *n_y + ifv->V  *n_x)*n_y;
+	                ifv->V_qt_star =  mid_qt*n_x-(-ifv->U  *n_y + ifv->V  *n_x)*n_x;
 		}
 	if(ifv->u_add_c > 0.0)
 		ifv->u_add_c = 0.0;

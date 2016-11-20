@@ -42,9 +42,9 @@ struct cell_var {
 	double *gradx_w,     *grady_w,     *gradz_w;
 	double *delta_U_e;
 	double **F_delta_e;
-	double **RHO_star,    **P_star;
-	double **RHO_minus_c, **P_minus_c;
-	double **RHO_add_c,   **P_add_c;
+	double **RHO_star,    **P_star,    **U_qt_star,    **V_qt_star;
+	double **RHO_minus_c, **P_minus_c, **U_qt_minus_c, **V_qt_minus_c;
+	double **RHO_add_c,   **P_add_c,   **U_qt_add_c,   **V_qt_add_c;
 	double **u_star, **u_minus_c, **u_add_c;
 };
 
@@ -66,9 +66,9 @@ struct i_f_var {
 	double d_w;
 	double delta_U_e;
 	double F_delta_e;
-	double RHO_star,    P_star;
-	double RHO_minus_c, P_minus_c;
-	double RHO_add_c,   P_add_c;
+	double RHO_star,    P_star,    U_qt_star,    V_qt_star;
+	double RHO_minus_c, P_minus_c, U_qt_minus_c, V_qt_minus_c;
+	double RHO_add_c,   P_add_c,   U_qt_add_c,   V_qt_add_c;
 	double u_star, u_minus_c, u_add_c;
 };
 

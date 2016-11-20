@@ -286,17 +286,23 @@ int interface_var_init
 			if ((int)config[2] == 2)
 				ifv->F_phi = 0.0;
 
-			ifv->RHO_star = ifv->RHO;
-			ifv->P_star   = ifv->P;
-			ifv->RHO_minus_c = ifv->RHO;
-			ifv->P_minus_c   = ifv->P;
-			ifv->RHO_add_c = ifv->RHO;
-			ifv->P_add_c   = ifv->P;
+			ifv->RHO_star     = ifv->RHO;
+			ifv->P_star       = ifv->P;
+			ifv->U_qt_star    = 0.0;
+			ifv->V_qt_star    = 0.0;
+			ifv->RHO_minus_c  = ifv->RHO;
+			ifv->P_minus_c    = ifv->P;
+			ifv->U_qt_minus_c = 0.0;
+			ifv->V_qt_minus_c = 0.0;
+			ifv->RHO_add_c    = ifv->RHO;
+			ifv->P_add_c      = ifv->P;
+			ifv->U_qt_add_c   = 0.0;
+			ifv->V_qt_add_c   = 0.0;
 
 			ifv->F_delta_e = 0.0;
-			ifv->u_star = 0.0;
+			ifv->u_star    = 0.0;
 			ifv->u_minus_c = 0.0;
-			ifv->u_add_c = 0.0;
+			ifv->u_add_c   = 0.0;
 
 			return -2;
 		}
