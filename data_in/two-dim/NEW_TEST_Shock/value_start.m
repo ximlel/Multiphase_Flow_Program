@@ -2,19 +2,29 @@ line=10;
 column=200;
 shock=95;
 
+%%
+gamma=1.4;
+M=6;
 
-qt_L=4 
-qt_R=3
-qn=0
+f=1/(2/(gamma+1)/M/M+(gamma-1)/(gamma+1));
+g=2*gamma/(gamma+1)*M*M-(gamma-1)/(gamma+1);
 
-rho_R=2
-u_R=qn-qt_R
-v_R=qn+qt_R
-p_R=0.1
-rho_L=3
-u_L=qn-qt_L
-v_L=qn+qt_L
-p_L=p_R
+
+rho_L=1
+qt_L=1
+p_L=1/gamma/M/M
+rho_R=f
+qt_R=1/f
+p_R=g/gamma/M/M
+%%
+
+
+u_R=qt_R*sqrt(2.0)/2.0
+v_R=qt_R*sqrt(2.0)/2.0
+
+u_L=qt_L*sqrt(2.0)/2.0
+v_L=qt_L*sqrt(2.0)/2.0
+
 rho_M=(rho_R+rho_L)/2.0
 u_M=u_R*rho_R/(rho_R+rho_L)+u_L*rho_L/(rho_R+rho_L)
 v_M=v_R*rho_R/(rho_R+rho_L)+v_L*rho_L/(rho_R+rho_L)

@@ -1,4 +1,4 @@
-line=100;
+line=10;
 column=100;
 shock=50;
 

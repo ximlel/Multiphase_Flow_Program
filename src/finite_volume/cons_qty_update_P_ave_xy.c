@@ -378,6 +378,7 @@ static int sub_cell_update
 		for (int i = j+1; i < cp[k][0]*12+1; i++)
 			delta_U_e += 0.5*(scv[j].vol/cv->vol[k]*scv[j].RHO)*(scv[i].vol/cv->vol[k]*scv[i].RHO)*((scv[j].U_qt-scv[i].U_qt)*(scv[j].U_qt-scv[i].U_qt) + (scv[j].V_qt-scv[i].V_qt)*(scv[j].V_qt-scv[i].V_qt))/scv[cp[k][0]*12+1].RHO;
 
+//	delta_U_e = 0.0;
 
 	cv->U_rho[k] = scv[cp[k][0]*12+1].U_rho;
 	cv->U_e[k]   = scv[cp[k][0]*12+1].U_e - delta_U_e;
