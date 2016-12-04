@@ -70,14 +70,19 @@ void flux_copy_ifv2cv(struct i_f_var ifv, struct cell_var *cv, int k, int j)
 	cv->P_star[k][j]       = ifv.P_star;
 	cv->U_qt_star[k][j]    = ifv.U_qt_star;
 	cv->V_qt_star[k][j]    = ifv.V_qt_star;
+	cv->gamma_star[k][j]   = ifv.gamma_star;
+
 	cv->RHO_add_c[k][j]    = ifv.RHO_add_c;
 	cv->P_add_c[k][j]      = ifv.P_add_c;
 	cv->U_qt_add_c[k][j]   = ifv.U_qt_add_c;
 	cv->V_qt_add_c[k][j]   = ifv.V_qt_add_c;
+	cv->gamma_add_c[k][j]  = ifv.gamma_add_c;
+
 	cv->RHO_minus_c[k][j]  = ifv.RHO_minus_c;
 	cv->P_minus_c[k][j]    = ifv.P_minus_c;
 	cv->U_qt_minus_c[k][j] = ifv.U_qt_minus_c;
 	cv->V_qt_minus_c[k][j] = ifv.V_qt_minus_c;
+	cv->gamma_minus_c[k][j] = ifv.gamma_minus_c;
 
 	cv->u_star[k][j]  = ifv.u_star;
 	cv->u_minus_c[k][j] = ifv.u_minus_c;

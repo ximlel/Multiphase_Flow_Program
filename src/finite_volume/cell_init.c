@@ -177,14 +177,19 @@ struct cell_var cell_mem_init(const struct mesh_var mv, struct flu_var * FV)
 	CP_INIT_MEM(P_star, num_cell);
 	CP_INIT_MEM(U_qt_star, num_cell);
 	CP_INIT_MEM(V_qt_star, num_cell);
+	CP_INIT_MEM(gamma_star, num_cell);
+
 	CP_INIT_MEM(RHO_minus_c, num_cell);
 	CP_INIT_MEM(P_minus_c, num_cell);
 	CP_INIT_MEM(U_qt_minus_c, num_cell);
 	CP_INIT_MEM(V_qt_minus_c, num_cell);
+	CP_INIT_MEM(gamma_minus_c, num_cell);
+
 	CP_INIT_MEM(RHO_add_c, num_cell);
 	CP_INIT_MEM(P_add_c, num_cell);
 	CP_INIT_MEM(U_qt_add_c, num_cell);
 	CP_INIT_MEM(V_qt_add_c, num_cell);
+	CP_INIT_MEM(gamma_add_c, num_cell);
 
 	CP_INIT_MEM(u_star, num_cell);
 	CP_INIT_MEM(u_minus_c, num_cell);

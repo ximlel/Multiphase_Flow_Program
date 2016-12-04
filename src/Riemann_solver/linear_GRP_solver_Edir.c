@@ -11,7 +11,7 @@ void linear_GRP_solver_Edir
  double   u_L, double   u_R, double   d_u_L, double   d_u_R,
  double   v_L, double   v_R, double   d_v_L, double   d_v_R,
  double   p_L, double   p_R, double   d_p_L, double   d_p_R,
- double  gamma, double  eps)
+ double gamma_L, double gamma_R, double  eps)
 {
   double dist;
   double c_L, c_R, c_frac;
@@ -25,7 +25,11 @@ void linear_GRP_solver_Edir
 
   double u_t_mat, p_t_mat;
 
-  double shk_spd, SmUs, SmUL, SmUR, zeta = (gamma-1.0)/(gamma+1.0), zts = zeta*zeta;
+  double shk_spd, SmUs, SmUL, SmUR;
+  
+  double zeta_L = (gamma_L-1.0)/(gamma_L+1.0), zts_L = zeta_L*zeta_L;
+  double zeta_R = (gamma_R-1.0)/(gamma_R+1.0), zts_R = zeta_R*zeta_R;
+  
   double C, rho_x;
 
   double g_rho, g_u, g_p, f;
@@ -33,8 +37,8 @@ void linear_GRP_solver_Edir
   double speed_L, speed_R;
 
 
-  c_L = sqrt(gamma * p_L / rho_L);
-  c_R = sqrt(gamma * p_R / rho_R);
+  c_L = sqrt(gamma_L * p_L / rho_L);
+  c_R = sqrt(gamma_R * p_R / rho_R);
 
   dist = (rho_L-rho_R)*(rho_L-rho_R) + (u_L-u_R)*(u_L-u_R) + (p_L-p_R)*(p_L-p_R);
   //dist = sqrt((u_L-u_R)*(u_L-u_R) + (p_L-p_R)*(p_L-p_R));
@@ -150,31 +154,31 @@ source_star[3] = p_star;
   }
 
 //=========non-acoustic case==========
-  Riemann_solver_exact(&u_star, &p_star, gamma, u_L, u_R, p_L, p_R, c_L, c_R, CRW, eps, 500);
+  Riemann_solver_exact(&u_star, &p_star, gamma_L, gamma_R, u_L, u_R, p_L, p_R, c_L, c_R, CRW, eps, 500);
 
 if(CRW[0])
 {
-  rho_star_L = rho_L*pow(p_star/p_L, 1.0/gamma);//MID[0] = WL[0] * pow(MID[2]/WL[2] , 1.0/GAMMA);
-    c_star_L =   c_L*pow(p_star/p_L, 0.5*(gamma-1.0)/gamma);//CSTAR = CL * pow(P_STAR/WL[2] , G1)
+  rho_star_L = rho_L*pow(p_star/p_L, 1.0/gamma_L);//MID[0] = WL[0] * pow(MID[2]/WL[2] , 1.0/GAMMA);
+    c_star_L =   c_L*pow(p_star/p_L, 0.5*(gamma_L-1.0)/gamma_L);//CSTAR = CL * pow(P_STAR/WL[2] , G1)
      speed_L =   u_L - c_L;
 }
 else
 {
-  rho_star_L = rho_L*(p_star+zeta*p_L)/(p_L+zeta*p_star);
-    c_star_L = sqrt(gamma * p_star / rho_star_L);
-     speed_L = u_L - c_L*sqrt(0.5*((gamma+1.0)*(p_star/p_L) + (gamma-1.0))/gamma);//speed_L = (rho_star_L*u_star - rho_L*u_L) / (rho_star_L - rho_L);
+  rho_star_L = rho_L*(p_star+zeta_L*p_L)/(p_L+zeta_L*p_star);
+    c_star_L = sqrt(gamma_L * p_star / rho_star_L);
+     speed_L = u_L - c_L*sqrt(0.5*((gamma_L+1.0)*(p_star/p_L) + (gamma_L-1.0))/gamma_L);//speed_L = (rho_star_L*u_star - rho_L*u_L) / (rho_star_L - rho_L);
 }
 if(CRW[1])
 {
-  rho_star_R = rho_R*pow(p_star/p_R,1.0/gamma);//MID[0] = WR[0] * pow(MID[2]/WR[2] , 1.0/GAMMA);
-    c_star_R =   c_R*pow(p_star/p_R, 0.5*(gamma-1.0)/gamma);//CSTAR= CR * pow(P_STAR/WR[2] , G1);
+  rho_star_R = rho_R*pow(p_star/p_R,1.0/gamma_R);//MID[0] = WR[0] * pow(MID[2]/WR[2] , 1.0/GAMMA);
+    c_star_R =   c_R*pow(p_star/p_R, 0.5*(gamma_R-1.0)/gamma_R);//CSTAR= CR * pow(P_STAR/WR[2] , G1);
      speed_R =   u_R + c_R;
 }
 else
 {
-  rho_star_R = rho_R*(p_star+zeta*p_R)/(p_R+zeta*p_star);
-    c_star_R = sqrt(gamma * p_star / rho_star_R);
-     speed_R = u_R + c_R*sqrt(0.5*((gamma+1.0)*(p_star/p_R) + (gamma-1.0))/gamma);//speed_R = (rho_star_R*u_star - rho_R*u_R) / (rho_star_R - rho_R);
+  rho_star_R = rho_R*(p_star+zeta_R*p_R)/(p_R+zeta_R*p_star);
+    c_star_R = sqrt(gamma_R * p_star / rho_star_R);
+     speed_R = u_R + c_R*sqrt(0.5*((gamma_R+1.0)*(p_star/p_R) + (gamma_R-1.0))/gamma_R);//speed_R = (rho_star_R*u_star - rho_R*u_R) / (rho_star_R - rho_R);
 }
 
   wave_speed[0] = speed_L;
@@ -228,26 +232,26 @@ else
   {
     if((CRW[0]) && ((u_star-c_star_L) > lambda)) // the direction is in a 1-CRW
     {
-      source[1] = zeta*(u_L+2.0*(c_L+lambda)/(gamma-1.0));
+      source[1] = zeta_L*(u_L+2.0*(c_L+lambda)/(gamma_L-1.0));
       C = source[1] - lambda;
-      source[3] = pow(C/c_L, 2.0*gamma/(gamma-1.0)) * p_L;
-      source[0] = gamma*source[3]/C/C;
+      source[3] = pow(C/c_L, 2.0*gamma_L/(gamma_L-1.0)) * p_L;
+      source[0] = gamma_L*source[3]/C/C;
 
       c_frac = C/c_L;
-      TdS = (d_p_L - d_rho_L*c_L*c_L)/(gamma-1.0)/rho_L;
-      d_Psi = d_u_L + (gamma*d_p_L/c_L - c_L*d_rho_L)/(gamma-1.0)/rho_L;
+      TdS = (d_p_L - d_rho_L*c_L*c_L)/(gamma_L-1.0)/rho_L;
+      d_Psi = d_u_L + (gamma_L*d_p_L/c_L - c_L*d_rho_L)/(gamma_L-1.0)/rho_L;
       //d_L = ( (1.0+zeta)*pow(c_frac, 0.5/zeta) + zeta*pow(c_frac, (1.0+zeta)/zeta) )/(1.0+2.0*zeta);
       //d_L = d_L * TdS;
       //d_L = d_L - c_L*pow(c_frac, 0.5/zeta) * d_Psi;
-      direvative[1] = ( (1.0+zeta)*pow(c_frac, 0.5/zeta) + zeta*pow(c_frac, (1.0+zeta)/zeta) )/(1.0+2.0*zeta);
+      direvative[1] = ( (1.0+zeta_L)*pow(c_frac, 0.5/zeta_L) + zeta_L*pow(c_frac, (1.0+zeta_L)/zeta_L) )/(1.0+2.0*zeta_L);
       direvative[1] = direvative[1] * TdS;
-      direvative[1] = direvative[1] - c_L*pow(c_frac, 0.5/zeta)*d_Psi;
+      direvative[1] = direvative[1] - c_L*pow(c_frac, 0.5/zeta_L)*d_Psi;
       direvative[3] = source[0]*(source[1]-lambda)*direvative[1];
 
 
       //direvative[0] = rho_star_L*(u_star-lambda)*pow(c_star_L/c_L, (1.0+zeta)/zeta)*(d_p_L - d_rho_L*c_L*c_L)/rho_L;
       //direvative[0] = (direvative[0] + direvative[3]) / c_star_L/c_star_L;
-      direvative[0] = source[0]*(source[1]-lambda)*pow(c_frac, (1.0+zeta)/zeta)*(d_p_L - d_rho_L*c_L*c_L)/rho_L;
+      direvative[0] = source[0]*(source[1]-lambda)*pow(c_frac, (1.0+zeta_L)/zeta_L)*(d_p_L - d_rho_L*c_L*c_L)/rho_L;
       direvative[0] = (direvative[0] + direvative[3]) / C/C;
 
       source[2] = v_L;
@@ -255,25 +259,25 @@ else
     }
     else if((CRW[1]) && ((u_star+c_star_R) < lambda)) // the direction is in a 3-CRW
     {
-      source[1] = zeta*(u_R-2.0*(c_R-lambda)/(gamma-1.0));
+      source[1] = zeta_R*(u_R-2.0*(c_R-lambda)/(gamma_R-1.0));
       C = lambda-source[1];
-      source[3] = pow(C/c_R, 2.0*gamma/(gamma-1.0)) * p_R;
-      source[0] = gamma*source[3]/C/C;
+      source[3] = pow(C/c_R, 2.0*gamma_R/(gamma_R-1.0)) * p_R;
+      source[0] = gamma_R*source[3]/C/C;
 
       c_frac = C/c_R;
-      TdS = (d_p_R - d_rho_R*c_R*c_R)/(gamma-1.0)/rho_R;
-      d_Phi = d_u_R - (gamma*d_p_R/c_R - c_R*d_rho_R)/(gamma-1.0)/rho_R;
+      TdS = (d_p_R - d_rho_R*c_R*c_R)/(gamma_R-1.0)/rho_R;
+      d_Phi = d_u_R - (gamma_R*d_p_R/c_R - c_R*d_rho_R)/(gamma_R-1.0)/rho_R;
       //d_R = ( (1.0+zeta)*pow(c_frac, 0.5/zeta) + zeta*pow(c_frac, (1.0+zeta)/zeta) )/(1.0+2.0*zeta);
       //d_R = d_R * TdS;
       //d_R = d_R + c_R*pow(c_frac, 0.5/zeta)*d_Phi;
-      direvative[1] = ( (1.0+zeta)*pow(c_frac, 0.5/zeta) + zeta*pow(c_frac, (1.0+zeta)/zeta))/(1.0+2.0*zeta);
+      direvative[1] = ( (1.0+zeta_R)*pow(c_frac, 0.5/zeta_R) + zeta_R*pow(c_frac, (1.0+zeta_R)/zeta_R))/(1.0+2.0*zeta_R);
       direvative[1] = direvative[1] * TdS;
-      direvative[1] = direvative[1] + c_R*pow(c_frac, 0.5/zeta)*d_Phi;
+      direvative[1] = direvative[1] + c_R*pow(c_frac, 0.5/zeta_R)*d_Phi;
       direvative[3] = source[0]*(source[1]-lambda)*direvative[1];
 
       //direvative[0] = rho_star_R*(u_star-lambda)*pow(c_star_R/c_R, (1.0+zeta)/zeta)*(d_p_R - d_rho_R*c_R*c_R)/rho_R;
       //direvative[0] = (direvative[0] + direvative[3]) / c_star_R/c_star_R;
-      direvative[0] = source[0]*(source[1]-lambda)*pow(c_frac, (1.0+zeta)/zeta)*(d_p_R - d_rho_R*c_R*c_R)/rho_R;
+      direvative[0] = source[0]*(source[1]-lambda)*pow(c_frac, (1.0+zeta_R)/zeta_R)*(d_p_R - d_rho_R*c_R*c_R)/rho_R;
       direvative[0] = (direvative[0] + direvative[3]) / C/C;
 
       source[2] = v_R;
@@ -287,11 +291,11 @@ else
 	a_L = 1.0;
         b_L = 1.0 / rho_star_L / c_star_L;
 	c_frac = c_star_L/c_L;
-	TdS = (d_p_L - d_rho_L*c_L*c_L)/(gamma-1.0)/rho_L;
-	d_Psi = d_u_L + (gamma*d_p_L/c_L - c_L*d_rho_L)/(gamma-1.0)/rho_L;
-	d_L = ( (1.0+zeta)*pow(c_frac, 0.5/zeta) + zeta*pow(c_frac, (1.0+zeta)/zeta) )/(1.0+2.0*zeta);
+	TdS = (d_p_L - d_rho_L*c_L*c_L)/(gamma_L-1.0)/rho_L;
+	d_Psi = d_u_L + (gamma_L*d_p_L/c_L - c_L*d_rho_L)/(gamma_L-1.0)/rho_L;
+	d_L = ( (1.0+zeta_L)*pow(c_frac, 0.5/zeta_L) + zeta_L*pow(c_frac, (1.0+zeta_L)/zeta_L) )/(1.0+2.0*zeta_L);
 	d_L = d_L * TdS;
-	d_L = d_L - c_L*pow(c_frac, 0.5/zeta) * d_Psi;
+	d_L = d_L - c_L*pow(c_frac, 0.5/zeta_L) * d_Psi;
       }
       else //the 1-wave is a shock
       {
@@ -310,13 +314,13 @@ else
 
 	d_L = L_rho*d_rho_L + L_u*d_u_L + L_p*d_p_L;*/
 
-  SmUs = -sqrt(0.5*((gamma+1.0)*p_L   +(gamma-1.0)*p_star)/rho_star_L);
-  SmUL = -sqrt(0.5*((gamma+1.0)*p_star+(gamma-1.0)*p_L   )/rho_L);
+  SmUs = -sqrt(0.5*((gamma_L+1.0)*p_L   +(gamma_L-1.0)*p_star)/rho_star_L);
+  SmUL = -sqrt(0.5*((gamma_L+1.0)*p_star+(gamma_L-1.0)*p_L   )/rho_L);
 
-  VAR = sqrt((1-zeta)/(rho_L*(p_star+zeta*p_L)));
+  VAR = sqrt((1-zeta_L)/(rho_L*(p_star+zeta_L*p_L)));
 
-  H1 =  0.5* VAR * (p_star+(1.0+2.0*zeta)*p_L)/(p_star+zeta*p_L);
-  H2 = -0.5*VAR * ((2.0+zeta)*p_star + zeta*p_L)/(p_star+zeta*p_L);
+  H1 =  0.5* VAR * (p_star+(1.0+2.0*zeta_L)*p_L)/(p_star+zeta_L*p_L);
+  H2 = -0.5*VAR * ((2.0+zeta_L)*p_star + zeta_L*p_L)/(p_star+zeta_L*p_L);
   H3 = -0.5*VAR * (p_star-p_L) / rho_L;
 
   L_p = -1.0/rho_L - SmUL*H2;
@@ -333,11 +337,11 @@ else
 	a_R = 1.0;
         b_R = -1.0 / rho_star_R / c_star_R;
 	c_frac = c_star_R/c_R;
-	TdS = (d_p_R - d_rho_R*c_R*c_R)/(gamma-1.0)/rho_R;
-	d_Phi = d_u_R - (gamma*d_p_R/c_R - c_R*d_rho_R)/(gamma-1.0)/rho_R;
-	d_R = ( (1.0+zeta)*pow(c_frac, 0.5/zeta) + zeta*pow(c_frac, (1.0+zeta)/zeta) )/(1.0+2.0*zeta);
+	TdS = (d_p_R - d_rho_R*c_R*c_R)/(gamma_R-1.0)/rho_R;
+	d_Phi = d_u_R - (gamma_R*d_p_R/c_R - c_R*d_rho_R)/(gamma_R-1.0)/rho_R;
+	d_R = ( (1.0+zeta_R)*pow(c_frac, 0.5/zeta_R) + zeta_R*pow(c_frac, (1.0+zeta_R)/zeta_R) )/(1.0+2.0*zeta_R);
 	d_R = d_R * TdS;
-	d_R = d_R + c_R*pow(c_frac, 0.5/zeta)*d_Phi;
+	d_R = d_R + c_R*pow(c_frac, 0.5/zeta_R)*d_Phi;
       }
       else //the 3-wave is a shock
       {
@@ -356,13 +360,13 @@ else
 
 	d_R = L_rho*d_rho_R + L_u*d_u_R + L_p*d_p_R;*/
 
-  SmUs = sqrt(0.5*((gamma+1.0)*p_R   + (gamma-1.0)*p_star)/rho_star_R);
-  SmUR = sqrt(0.5*((gamma+1.0)*p_star+ (gamma-1.0)*p_R   )/rho_R);
+  SmUs = sqrt(0.5*((gamma_R+1.0)*p_R   + (gamma_R-1.0)*p_star)/rho_star_R);
+  SmUR = sqrt(0.5*((gamma_R+1.0)*p_star+ (gamma_R-1.0)*p_R   )/rho_R);
 
-  VAR  = sqrt((1.0-zeta)/(rho_R*(p_star+zeta*p_R)));
+  VAR  = sqrt((1.0-zeta_R)/(rho_R*(p_star+zeta_R*p_R)));
 
-  H1 = 0.5* VAR * (p_star+(1+2.0*zeta)*p_R)/(p_star+zeta*p_R);
-  H2 = -0.5*VAR * ((2.0+zeta)*p_star+zeta*p_R)/(p_star+zeta*p_R);
+  H1 = 0.5* VAR * (p_star+(1+2.0*zeta_R)*p_R)/(p_star+zeta_R*p_R);
+  H2 = -0.5*VAR * ((2.0+zeta_R)*p_star+zeta_R*p_R)/(p_star+zeta_R*p_R);
   H3 = -0.5*(p_star-p_R)* VAR /rho_R;
 
   L_p = -1.0/rho_R + SmUR*H2;
@@ -394,7 +398,7 @@ else
 	if(CRW[1]) //the 3-wave is a CRW
 	{
 	  //already total direvative!
-	  direvative[0] = rho_star_R*(u_star-lambda)*pow(c_star_R/c_R, (1.0+zeta)/zeta)*(d_p_R - d_rho_R*c_R*c_R)/rho_R;
+	  direvative[0] = rho_star_R*(u_star-lambda)*pow(c_star_R/c_R, (1.0+zeta_R)/zeta_R)*(d_p_R - d_rho_R*c_R*c_R)/rho_R;
 	  direvative[0] = (direvative[0] + direvative[3]) / c_star_R/c_star_R;
 
 	  direvative[2] = -source[1]*d_v_R*source[0]/rho_R;
@@ -414,13 +418,13 @@ else
 
 	  direvative[0] = (f*u_star - g_p*p_t_mat - g_u*u_t_mat) / g_rho;*/
 
-  SmUs = sqrt(0.5*((gamma+1.0)*p_R   + (gamma-1.0)*p_star)/rho_star_R);
-  SmUR = sqrt(0.5*((gamma+1.0)*p_star+ (gamma-1.0)*p_R   )/rho_R);
+  SmUs = sqrt(0.5*((gamma_R+1.0)*p_R   + (gamma_R-1.0)*p_star)/rho_star_R);
+  SmUR = sqrt(0.5*((gamma_R+1.0)*p_star+ (gamma_R-1.0)*p_R   )/rho_R);
 
-  VAR = p_R + zeta*p_star;
-  H1 = rho_R * p_R    * (1.0 - zts) / VAR/VAR;
-  H2 = rho_R * p_star * (zts - 1.0) / VAR/VAR;
-  H3 = (p_star + zeta*p_R)/VAR;
+  VAR = p_R + zeta_R*p_star;
+  H1 = rho_R * p_R    * (1.0 - zts_R) / VAR/VAR;
+  H2 = rho_R * p_star * (zts_R - 1.0) / VAR/VAR;
+  H3 = (p_star + zeta_R*p_R)/VAR;
 
   L_rho = SmUR * H3 * d_rho_R;
   L_u = -rho_R * (H2*c_R*c_R + H3) * d_u_R;
@@ -450,7 +454,7 @@ else
 	if(CRW[0]) //the 1-wave is a CRW
 	{
 	  //already total direvative!
-	  direvative[0] = rho_star_L*(u_star-lambda)*pow(c_star_L/c_L, (1.0+zeta)/zeta)*(d_p_L - d_rho_L*c_L*c_L)/rho_L;
+	  direvative[0] = rho_star_L*(u_star-lambda)*pow(c_star_L/c_L, (1.0+zeta_L)/zeta_L)*(d_p_L - d_rho_L*c_L*c_L)/rho_L;
 	  direvative[0] = (direvative[0] + direvative[3]) / c_star_L/c_star_L;
 
 	  direvative[2] = -source[1]*d_v_L*source[0]/rho_L;
@@ -470,14 +474,14 @@ else
 
 	  direvative[0] = (f*u_star - g_p*p_t_mat - g_u*u_t_mat) / g_rho;*/
 
-  SmUs = -sqrt(0.5*((gamma+1.0)*p_L   +(gamma-1.0)*p_star)/rho_star_L);
-  SmUL = -sqrt(0.5*((gamma+1.0)*p_star+(gamma-1.0)*p_L   )/rho_L);
+  SmUs = -sqrt(0.5*((gamma_L+1.0)*p_L   +(gamma_L-1.0)*p_star)/rho_star_L);
+  SmUL = -sqrt(0.5*((gamma_L+1.0)*p_star+(gamma_L-1.0)*p_L   )/rho_L);
 
-  VAR = p_L + zeta*p_star;
+  VAR = p_L + zeta_L*p_star;
 
-  H1 = rho_L * p_L    * (1.0 - zts) / VAR/VAR;
-  H2 = rho_L * p_star * (zts - 1.0) / VAR/VAR;
-  H3 = (p_star + zeta*p_L)/VAR;
+  H1 = rho_L * p_L    * (1.0 - zts_L) / VAR/VAR;
+  H2 = rho_L * p_star * (zts_L - 1.0) / VAR/VAR;
+  H3 = (p_star + zeta_L*p_L)/VAR;
 
   L_rho = SmUL * H3 * d_rho_L;
   L_u = -rho_L*(H2*c_L*c_L + H3) * d_u_L;

@@ -290,14 +290,19 @@ int interface_var_init
 			ifv->P_star       = ifv->P;
 			ifv->U_qt_star    = 0.0;
 			ifv->V_qt_star    = 0.0;
+			ifv->gamma_star   = ifv->gamma;
+
 			ifv->RHO_minus_c  = ifv->RHO;
 			ifv->P_minus_c    = ifv->P;
 			ifv->U_qt_minus_c = 0.0;
 			ifv->V_qt_minus_c = 0.0;
+			ifv->gamma_minus_c = ifv->gamma;
+
 			ifv->RHO_add_c    = ifv->RHO;
 			ifv->P_add_c      = ifv->P;
 			ifv->U_qt_add_c   = 0.0;
 			ifv->V_qt_add_c   = 0.0;
+			ifv->gamma_add_c  = ifv->gamma;
 
 			ifv->F_delta_e = 0.0;
 			ifv->u_star    = 0.0;

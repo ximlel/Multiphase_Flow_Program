@@ -15,7 +15,16 @@ void cons_qty_init(struct cell_var * cv, const struct flu_var FV)
 	for(int k = 0; k < num_cell; k++)
 		{
 			cv->U_rho[k]   = FV.RHO[k];
-			cv->U_gamma[k] = FV.RHO[k] * FV.gamma[k];			
+
+			if(!(isinf(config[106]) || isinf(config[110]) || isinf(config[111])))
+				{
+					FV.gamma[k]  = FV.PHI[k]*config[6]*config[110] + (1.0-FV.PHI[k])*config[106]*config[111];
+					FV.gamma[k] /= FV.PHI[k]*config[110] + (1.0-FV.PHI[k])*config[111];
+					cv->U_gamma[k] = FV.gamma[k] * FV.RHO[k];
+				}
+			else
+				cv->U_gamma[k] = FV.RHO[k] * FV.gamma[k];
+		
 			cv->U_e[k]     = FV.P[k]/(FV.gamma[k]-1.0) + 0.5*FV.RHO[k]*FV.U[k]*FV.U[k];
 			cv->U_u[k]     = FV.RHO[k] * FV.U[k];			
 			if (dim > 1)
@@ -143,7 +152,14 @@ int cons_qty_update
 
 						}
 				}
-			if(isinf(config[60]))
+			
+			if(!(isinf(config[106]) || isinf(config[110]) || isinf(config[111])))
+				{
+					gamma  = cv->U_phi[k]/cv->U_rho[k]*config[6]*config[110] + (1.0-cv->U_phi[k]/cv->U_rho[k])*config[106]*config[111];
+					gamma /= cv->U_phi[k]/cv->U_rho[k]*config[110] + (1.0-cv->U_phi[k]/cv->U_rho[k])*config[111];
+					cv->U_gamma[k] = gamma*cv->U_rho[k];
+				}
+			else if(isinf(config[60]))
 				cv->U_gamma[k] = gamma*cv->U_rho[k];
 			
 			cv->U_e[k] += flux_v_fix;///cv->U_rho[k]/2.0;

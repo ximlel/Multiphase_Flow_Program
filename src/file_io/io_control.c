@@ -21,7 +21,7 @@ static void config_check()
 		}
 
 	// species
-	config[2] = isinf(config[2]) ? 1 : config[9];	
+	config[2] = isinf(config[2]) ? 1 : config[2];	
 
 	if(isinf(config[4]))
 		config[4] = EPS;

@@ -31,7 +31,7 @@ read
 #./hydrocode.out NEW_TEST_Shock NEW_TEST_Shock/NEW_TEST_Shock	2 1_Riemann_exact	oblique_periodic
 
 #./hydrocode.out NEW_TEST NEW_TEST/NEW_TEST_Roe	2 1_Roe			free
-./hydrocode.out NEW_TEST NEW_TEST/NEW_TEST	2 1_Riemann_exact	free
+#./hydrocode.out NEW_TEST NEW_TEST/NEW_TEST	2 1_Riemann_exact	free
 #./hydrocode.out NEW_TEST_BIG NEW_TEST_BIG/NEW_TEST_BIG_Roe	2 1_Roe			free
 
 #./hydrocode.out Riemann_2D3_Quad Riemann_2D3_Quad/Riemann_2D3_Quad_Roe	2 1_Roe			free
@@ -40,5 +40,9 @@ read
 
 #./hydrocode.out RMI/RMI_81	RMI/RMI_81	2 1_Riemann_exact RMI
 #./hydrocode.out RMI/RMI_81	RMI/RMI_81	2 2_GRP		  RMI
-#./hydrocode.out RMI/RMI_321	RMI/RMI_321	2 1_Riemann_exact RMI
+./hydrocode.out RMI/RMI_321	RMI/RMI_321	2 1_Riemann_exact RMI
 #./hydrocode.out RMI/RMI_321	RMI/RMI_321	2 2_GRP		  RMI
+
+#./hydrocode.out 1D_Shock-interface	1D_Shock-interface/1D_Shock-interface	2 1_Riemann_exact free
+#./hydrocode.out 2M_interface	2M_interface/2M_interface	2 1_Riemann_exact free
+#./hydrocode.out Numerical_Failures	Numerical_Failures/Numerical_Failures	2 1_Riemann_exact free

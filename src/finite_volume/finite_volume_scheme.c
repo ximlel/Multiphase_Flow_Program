@@ -41,6 +41,7 @@ void finite_volume_scheme(struct flu_var *FV, const struct mesh_var mv, const ch
 	int k, j, ivi, stop_step = 0, stop_t = 0, xy_split = 1;
 	for(int i = 0; i < (int)config[5] && stop_step == 0; ++i)
 		{
+
 			start_clock = clock();
 
 			config[33] = (double)xy_split;
@@ -157,10 +158,13 @@ void finite_volume_scheme(struct flu_var *FV, const struct mesh_var mv, const ch
 				xy_split = 2;
 			else if (xy_split == 2)
 				xy_split = 1;
+
 		}
 
 	//	for (int i = 0; i < num_cell; i++)
 	//		cv.U_e[i] += cv.delta_U_e[i];
+
+
 
 	fluid_var_update(FV, cv);
 

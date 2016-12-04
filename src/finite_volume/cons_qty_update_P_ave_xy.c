@@ -16,7 +16,7 @@ struct sub_cell_var {
 
 static int sub_cell_init
 (const struct cell_var cv, const struct mesh_var mv,
- const double tau, struct sub_cell_var * scv, const int k, double gamma)
+ const double tau, struct sub_cell_var * scv, const int k)
 {
 	const int dim = (int)config[0];
 	const double eps = (int)config[4];
@@ -30,13 +30,16 @@ static int sub_cell_init
 			scv[j].U_e   = cv.U_e[k];
 			scv[j].U_u   = cv.U_u[k];
 			scv[j].U_v   = cv.U_v[k];
+			scv[j].U_gamma = cv.U_gamma[k];
+			if ((int)config[2] == 2)
+				scv[j].U_phi = cv.U_phi[k];
 			scv[j].delta_U_e = cv.delta_U_e[k];
 		}
 
 	for(int j = cp[k][0]*12; j < cp[k][0]*12+2; j++)
 		{
 			scv[j].RHO   = scv[j].U_rho;	
-			scv[j].gamma = gamma;
+			scv[j].gamma = scv[j].U_gamma/scv[j].U_rho;			
 			scv[j].U     = scv[j].U_u/scv[j].U_rho;
 			scv[j].P     = (scv[j].U_e - 0.5*(scv[j].U_u*scv[j].U_u)/scv[j].U_rho) * (scv[j].gamma-1.0);
 			if (dim > 1)
@@ -90,6 +93,8 @@ static int sub_cell_init
 			scv[cp[k][0]*12+1].F_e[j]   = cv.F_e[k][j];
 			scv[cp[k][0]*12+1].F_u[j]   = cv.F_u[k][j];
 			scv[cp[k][0]*12+1].F_v[j]   = cv.F_v[k][j];
+			if ((int)config[2] == 2)
+				scv[cp[k][0]*12+1].F_phi[j] = cv.F_phi[k][j];
 			scv[cp[k][0]*12+1].F_delta_e[j] = cv.F_delta_e[k][j];
 		}
 
@@ -157,46 +162,55 @@ static int sub_cell_init
 					scv[j].P    = cv.P_add_c[k][l_split];
 					scv[j].U_qt = cv.U_qt_add_c[k][l_split];
 					scv[j].V_qt = cv.V_qt_add_c[k][l_split];
+					scv[j].gamma = cv.gamma_add_c[k][l_split];
 
 					scv[j+cp[k][0]].RHO  = cv.RHO_star[k][l_split];
 					scv[j+cp[k][0]].P    = cv.P_star[k][l_split];
 					scv[j+cp[k][0]].U_qt = cv.U_qt_star[k][l_split];
 					scv[j+cp[k][0]].V_qt = cv.V_qt_star[k][l_split];
+					scv[j+cp[k][0]].gamma = cv.gamma_star[k][l_split];
 
 					scv[j+cp[k][0]*2].RHO  = cv.RHO_minus_c[k][l_split];
 					scv[j+cp[k][0]*2].P    = cv.P_minus_c[k][l_split];
 					scv[j+cp[k][0]*2].U_qt = cv.U_qt_minus_c[k][l_split];
 					scv[j+cp[k][0]*2].V_qt = cv.V_qt_minus_c[k][l_split];
+					scv[j+cp[k][0]*2].gamma = cv.gamma_minus_c[k][l_split];
 
 					scv[j+cp[k][0]*3].RHO  = cv.RHO_add_c[k][l_split];
 					scv[j+cp[k][0]*3].P    = cv.P_add_c[k][l_split];
 					scv[j+cp[k][0]*3].U_qt = cv.U_qt_add_c[k][l_split];
 					scv[j+cp[k][0]*3].V_qt = cv.V_qt_add_c[k][l_split];
+					scv[j+cp[k][0]*3].gamma = cv.gamma_add_c[k][l_split];
 
 					scv[j+cp[k][0]*4].RHO  = cv.RHO_star[k][l_split];
 					scv[j+cp[k][0]*4].P    = cv.P_star[k][l_split];
 					scv[j+cp[k][0]*4].U_qt = cv.U_qt_star[k][l_split];
 					scv[j+cp[k][0]*4].V_qt = cv.V_qt_star[k][l_split];
+					scv[j+cp[k][0]*4].gamma = cv.gamma_star[k][l_split];
 
 					scv[j+cp[k][0]*5].RHO  = cv.RHO_minus_c[k][l_split];
 					scv[j+cp[k][0]*5].P    = cv.P_minus_c[k][l_split];
 					scv[j+cp[k][0]*5].U_qt = cv.U_qt_minus_c[k][l_split];
 					scv[j+cp[k][0]*5].V_qt = cv.V_qt_minus_c[k][l_split];
+					scv[j+cp[k][0]*5].gamma = cv.gamma_minus_c[k][l_split];
 
 					scv[j+cp[k][0]*6].RHO  = cv.RHO_add_c[k][l_split];
 					scv[j+cp[k][0]*6].P    = cv.P_add_c[k][l_split];
 					scv[j+cp[k][0]*6].U_qt = cv.U_qt_add_c[k][l_split];
 					scv[j+cp[k][0]*6].V_qt = cv.V_qt_add_c[k][l_split];
+					scv[j+cp[k][0]*6].gamma = cv.gamma_add_c[k][l_split];
 
 					scv[j+cp[k][0]*7].RHO  = cv.RHO_star[k][l_split];
 					scv[j+cp[k][0]*7].P    = cv.P_star[k][l_split];
 					scv[j+cp[k][0]*7].U_qt = cv.U_qt_star[k][l_split];
 					scv[j+cp[k][0]*7].V_qt = cv.V_qt_star[k][l_split];
+					scv[j+cp[k][0]*7].gamma = cv.gamma_star[k][l_split];
 
 					scv[j+cp[k][0]*8].RHO  = cv.RHO_minus_c[k][l_split];
 					scv[j+cp[k][0]*8].P    = cv.P_minus_c[k][l_split];
 					scv[j+cp[k][0]*8].U_qt = cv.U_qt_minus_c[k][l_split];
 					scv[j+cp[k][0]*8].V_qt = cv.V_qt_minus_c[k][l_split];
+					scv[j+cp[k][0]*8].gamma = cv.gamma_minus_c[k][l_split];
 				}			
 			else if(((int)config[33] == 1 && j%2 == 1) || ((int)config[33] == 2 && j%2 == 0))
 				{
@@ -206,46 +220,55 @@ static int sub_cell_init
 					scv[j].P    = cv.P_add_c[k][l_split];
 					scv[j].U_qt = cv.U_qt_add_c[k][l_split];
 					scv[j].V_qt = cv.V_qt_add_c[k][l_split];
+					scv[j].gamma = cv.gamma_add_c[k][l_split];
 
 					scv[j+cp[k][0]].RHO  = cv.RHO_add_c[k][l_split];
 					scv[j+cp[k][0]].P    = cv.P_add_c[k][l_split];
 					scv[j+cp[k][0]].U_qt = cv.U_qt_add_c[k][l_split];
 					scv[j+cp[k][0]].V_qt = cv.V_qt_add_c[k][l_split];
+					scv[j+cp[k][0]].gamma = cv.gamma_add_c[k][l_split];
 
 					scv[j+cp[k][0]*2].RHO  = cv.RHO_add_c[k][l_split];
 					scv[j+cp[k][0]*2].P    = cv.P_add_c[k][l_split];
 					scv[j+cp[k][0]*2].U_qt = cv.U_qt_add_c[k][l_split];
 					scv[j+cp[k][0]*2].V_qt = cv.V_qt_add_c[k][l_split];
+					scv[j+cp[k][0]*2].gamma = cv.gamma_add_c[k][l_split];
 
 					scv[j+cp[k][0]*3].RHO  = cv.RHO_star[k][l_split];
 					scv[j+cp[k][0]*3].P    = cv.P_star[k][l_split];
 					scv[j+cp[k][0]*3].U_qt = cv.U_qt_star[k][l_split];
 					scv[j+cp[k][0]*3].V_qt = cv.V_qt_star[k][l_split];
+					scv[j+cp[k][0]*3].gamma = cv.gamma_star[k][l_split];
 
 					scv[j+cp[k][0]*4].RHO  = cv.RHO_star[k][l_split];
 					scv[j+cp[k][0]*4].P    = cv.P_star[k][l_split];
 					scv[j+cp[k][0]*4].U_qt = cv.U_qt_star[k][l_split];
 					scv[j+cp[k][0]*4].V_qt = cv.V_qt_star[k][l_split];
+					scv[j+cp[k][0]*4].gamma = cv.gamma_star[k][l_split];
 
 					scv[j+cp[k][0]*5].RHO  = cv.RHO_star[k][l_split];
 					scv[j+cp[k][0]*5].P    = cv.P_star[k][l_split];
 					scv[j+cp[k][0]*5].U_qt = cv.U_qt_star[k][l_split];
 					scv[j+cp[k][0]*5].V_qt = cv.V_qt_star[k][l_split];
+					scv[j+cp[k][0]*5].gamma = cv.gamma_star[k][l_split];
 
 					scv[j+cp[k][0]*6].RHO  = cv.RHO_minus_c[k][l_split];
 					scv[j+cp[k][0]*6].P    = cv.P_minus_c[k][l_split];
 					scv[j+cp[k][0]*6].U_qt = cv.U_qt_minus_c[k][l_split];
 					scv[j+cp[k][0]*6].V_qt = cv.V_qt_minus_c[k][l_split];
+					scv[j+cp[k][0]*6].gamma = cv.gamma_minus_c[k][l_split];
 
 					scv[j+cp[k][0]*7].RHO  = cv.RHO_minus_c[k][l_split];
 					scv[j+cp[k][0]*7].P    = cv.P_minus_c[k][l_split];
 					scv[j+cp[k][0]*7].U_qt = cv.U_qt_minus_c[k][l_split];
 					scv[j+cp[k][0]*7].V_qt = cv.V_qt_minus_c[k][l_split];
+					scv[j+cp[k][0]*7].gamma = cv.gamma_minus_c[k][l_split];
 
 					scv[j+cp[k][0]*8].RHO  = cv.RHO_minus_c[k][l_split];
 					scv[j+cp[k][0]*8].P    = cv.P_minus_c[k][l_split];
 					scv[j+cp[k][0]*8].U_qt = cv.U_qt_minus_c[k][l_split];
 					scv[j+cp[k][0]*8].V_qt = cv.V_qt_minus_c[k][l_split];
+					scv[j+cp[k][0]*8].gamma = cv.gamma_minus_c[k][l_split];
 				}
 		}
 
@@ -295,16 +318,19 @@ static int sub_cell_init
 					scv[j_c].P    = cv.P_add_c[k][j];
 					scv[j_c].U_qt = cv.U_qt_add_c[k][j];
 					scv[j_c].V_qt = cv.V_qt_add_c[k][j];
+					scv[j_c].gamma = cv.gamma_add_c[k][j];
 
 					scv[j_c+cp[k][0]].RHO  = cv.RHO_star[k][j];
 					scv[j_c+cp[k][0]].P    = cv.P_star[k][j];
 					scv[j_c+cp[k][0]].U_qt = cv.U_qt_star[k][j];
 					scv[j_c+cp[k][0]].V_qt = cv.V_qt_star[k][j];
+					scv[j_c+cp[k][0]].gamma = cv.gamma_star[k][j];
 
 					scv[j_c+cp[k][0]*2].RHO  = cv.RHO_minus_c[k][j];
 					scv[j_c+cp[k][0]*2].P    = cv.P_minus_c[k][j];
 					scv[j_c+cp[k][0]*2].U_qt = cv.U_qt_minus_c[k][j];
 					scv[j_c+cp[k][0]*2].V_qt = cv.V_qt_minus_c[k][j];
+					scv[j_c+cp[k][0]*2].gamma = cv.gamma_minus_c[k][j];
 				}
 			else if(((int)config[33] == 1 && j%2 == 0) || ((int)config[33] == 2 && j%2 == 1))
 				{			
@@ -312,16 +338,19 @@ static int sub_cell_init
 					scv[j_c].P    = scv[cp[k][0]*12+1].P;
 					scv[j_c].U_qt = 0.0;
 					scv[j_c].V_qt = 0.0;
+					scv[j_c].gamma = scv[cp[k][0]*12+1].gamma;
 
 					scv[j_c+cp[k][0]].RHO  = scv[cp[k][0]*12+1].RHO;
 					scv[j_c+cp[k][0]].P    = scv[cp[k][0]*12+1].P;
 					scv[j_c+cp[k][0]].U_qt = 0.0;
 					scv[j_c+cp[k][0]].V_qt = 0.0;
+					scv[j_c+cp[k][0]].gamma = scv[cp[k][0]*12+1].gamma;
 
 					scv[j_c+cp[k][0]*2].RHO  = scv[cp[k][0]*12+1].RHO;
 					scv[j_c+cp[k][0]*2].P    = scv[cp[k][0]*12+1].P;
 					scv[j_c+cp[k][0]*2].U_qt = 0.0;
 					scv[j_c+cp[k][0]*2].V_qt = 0.0;
+					scv[j_c+cp[k][0]*2].gamma = scv[cp[k][0]*12+1].gamma;
 				}
 		}
 	
@@ -331,11 +360,17 @@ static int sub_cell_init
 	scv[cp[k][0]*12].vol = cv.vol[k];
 	for(int j = 0; j < cp[k][0]*12; j++)
 		scv[cp[k][0]*12].vol -= scv[j].vol;
+
+	scv[cp[k][0]*12].RHO  = scv[cp[k][0]*12+1].RHO;
+	scv[cp[k][0]*12].P    = scv[cp[k][0]*12+1].P;
+	scv[cp[k][0]*12].U_qt = 0.0;
+	scv[cp[k][0]*12].V_qt = 0.0;
+	scv[cp[k][0]*12].gamma = scv[cp[k][0]*12+1].gamma;
 }
 
 static int sub_cell_update
 (const struct cell_var * cv, const struct mesh_var mv,
- struct sub_cell_var * scv, const int k, double gamma)
+ struct sub_cell_var * scv, const int k)
 {	
 	const int dim = (int)config[0];
 	const double eps = (int)config[4];
@@ -344,7 +379,7 @@ static int sub_cell_update
 	for(int j = cp[k][0]*12+1; j < cp[k][0]*12+2; j++)
 		{
 			scv[j].RHO   = scv[j].U_rho;	
-			scv[j].gamma = gamma;
+			scv[j].gamma = scv[j].U_gamma/scv[j].U_rho;
 			scv[j].U     = scv[j].U_u/scv[j].U_rho;
 			scv[j].P     = (scv[j].U_e - 0.5*(scv[j].U_u*scv[j].U_u)/scv[j].U_rho) * (scv[j].gamma-1.0);
 			if (dim > 1)
@@ -373,17 +408,29 @@ static int sub_cell_update
 		}
 
 	double delta_U_e = 0.0;
+	double P_ave, P_sum = 0.0, denom = 0.0;
 	
 	for (int j = 0; j < cp[k][0]*12+1; j++)
-		for (int i = j+1; i < cp[k][0]*12+1; i++)
-			delta_U_e += 0.5*(scv[j].vol/cv->vol[k]*scv[j].RHO)*(scv[i].vol/cv->vol[k]*scv[i].RHO)*((scv[j].U_qt-scv[i].U_qt)*(scv[j].U_qt-scv[i].U_qt) + (scv[j].V_qt-scv[i].V_qt)*(scv[j].V_qt-scv[i].V_qt))/scv[cp[k][0]*12+1].RHO;
+		{					
+			P_sum += scv[j].vol/cv->vol[k]*scv[j].P/(scv[j].gamma-1.0);
+			denom += scv[j].vol/cv->vol[k]/(scv[j].gamma-1.0);
+		}
+	P_ave = P_sum/denom;
 
+	delta_U_e = P_sum - P_ave/(scv[cp[k][0]*12+1].gamma-1.0);
+
+//if (denom-1.0/(scv[cp[k][0]*12+1].gamma-1.0) > 0.00000001)
+//	printf("%.16lf\n",denom-1.0/(scv[cp[k][0]*12+1].gamma-1.0));
+	
 //	delta_U_e = 0.0;
 
 	cv->U_rho[k] = scv[cp[k][0]*12+1].U_rho;
 	cv->U_e[k]   = scv[cp[k][0]*12+1].U_e - delta_U_e;
 	cv->U_u[k]   = scv[cp[k][0]*12+1].U_u;
 	cv->U_v[k]   = scv[cp[k][0]*12+1].U_v;
+	cv->U_gamma[k] = scv[cp[k][0]*12+1].U_gamma;
+	if ((int)config[2] == 2)
+		cv->U_phi[k] = scv[cp[k][0]*12+1].U_phi;
 	cv->delta_U_e[k] += delta_U_e;
 	
 	return 1;	
@@ -409,7 +456,7 @@ int cons_qty_update_corr_ave_P_xy
 			if(isinf(config[60]))
 				gamma = cv->U_gamma[k]/cv->U_rho[k];
 			
-			sub_cell_init(*cv, mv, tau, scv, k, gamma);
+			sub_cell_init(*cv, mv, tau, scv, k);
 			i = cp[k][0]*12+1;					
 			for(j = 0; j < cp[k][0]; j++)
 				{
@@ -425,14 +472,20 @@ int cons_qty_update_corr_ave_P_xy
 							scv[i].delta_U_e += -tau*scv[i].F_delta_e[j] * scv[i].length[j] / scv[i].vol;
 						}
 				}
-			if(sub_cell_update(cv, mv, scv, k, gamma) == 0)
+			if(!(isinf(config[106]) || isinf(config[110]) || isinf(config[111])))
+				{
+					gamma  = scv[i].U_phi/scv[i].U_rho*config[6]*config[110] + (1.0-scv[i].U_phi/scv[i].U_rho)*config[106]*config[111];
+					gamma /= scv[i].U_phi/scv[i].U_rho*config[110] + (1.0-scv[i].U_phi/scv[i].U_rho)*config[111];
+					scv[i].U_gamma = gamma*scv[i].U_rho;
+				}
+			else if(isinf(config[60]))
+				scv[i].U_gamma = gamma*scv[i].U_rho;
+
+			if(sub_cell_update(cv, mv, scv, k) == 0)
 				{
 					fprintf(stderr, "Error happens on sub cell updating primitive variable!\n");
 					return 0;
 				}
-			
-			if(isinf(config[60]))
-				cv->U_gamma[k] = gamma*cv->U_rho[k];
 		}
 	return 1;
 }
