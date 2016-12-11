@@ -419,11 +419,6 @@ static int sub_cell_update
 
 	delta_U_e = P_sum - P_ave/(scv[cp[k][0]*12+1].gamma-1.0);
 
-//if (denom-1.0/(scv[cp[k][0]*12+1].gamma-1.0) > 0.00000001)
-//	printf("%.16lf\n",denom-1.0/(scv[cp[k][0]*12+1].gamma-1.0));
-	
-//	delta_U_e = 0.0;
-
 	cv->U_rho[k] = scv[cp[k][0]*12+1].U_rho;
 	cv->U_e[k]   = scv[cp[k][0]*12+1].U_e - delta_U_e;
 	cv->U_u[k]   = scv[cp[k][0]*12+1].U_u;
