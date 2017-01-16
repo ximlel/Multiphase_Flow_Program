@@ -65,7 +65,7 @@ void finite_volume_scheme(struct flu_var *FV, const struct mesh_var mv, const ch
 					tau = tau_calc(cv, mv);
 
 					t_all += tau;
-					if(tau < 0.000001)
+					if(tau < 0.00000000001)
 						{
 							printf("\nThe length of the time step is so small at step %d, t_all=%lf, tau=%lf.\n",i,t_all,tau);
 							stop_t = 1;
@@ -161,12 +161,13 @@ void finite_volume_scheme(struct flu_var *FV, const struct mesh_var mv, const ch
 
 		}
 
-	//	for (int i = 0; i < num_cell; i++)
-	//		cv.U_e[i] += cv.delta_U_e[i];
+//		for (int i = 0; i < num_cell; i++)
+//			cv.U_e[i] += cv.delta_U_e[i];
 
 
 
 	fluid_var_update(FV, cv);
+
 
 	printf("\nThe cost of CPU time for the Eulerian method is %g seconds.\n", cpu_time);
 }

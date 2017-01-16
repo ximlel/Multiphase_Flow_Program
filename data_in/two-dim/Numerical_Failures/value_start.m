@@ -1,15 +1,16 @@
 line=1;
-column=250;
+column=400;
 interface=100;
 
-rho_1=1
-u_1=0
-p_1=1
-phi_1=1
-rho_2=0.125
+
+rho_1=2.7647
+u_1=1.4833
+p_1=4.4468
+phi_1=0
+rho_2=1.9
 u_2=0
-p_2=0.1
-phi_2=0
+p_2=1
+phi_2=1
 
 rho=zeros(column,1);
 for i=1:interface

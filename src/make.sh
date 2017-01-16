@@ -22,7 +22,7 @@ read
 
 #./hydrocode.out odd_even odd_even/odd_even	2 1_Riemann_exact Sod
 
-#./hydrocode.out NEW_TEST_OBLIQUE NEW_TEST_OBLIQUE/NEW_TEST_OBLIQUE_Roe	2 1_Roe			oblique_periodic
+#./hydrocode.out NEW_TEST_OBLIQUE NEW_TEST_OBLIQUE/NEW_TEST_O#./hydrocode.out 2DSI_1281	2DSI_1281/2DSI_1281	2 1_Riemann_exact RMIBLIQUE_Roe	2 1_Roe			oblique_periodic
 #./hydrocode.out NEW_TEST_OBLIQUE NEW_TEST_OBLIQUE/NEW_TEST_OBLIQUE	2 1_Riemann_exact	oblique_periodic
 #./hydrocode.out NEW_TEST_OBLIQUE NEW_TEST_OBLIQUE/NEW_TEST_OBLIQUE	2 2_GRP			oblique_periodic
 #./hydrocode.out NEW_TEST_OBLIQUE_SMALL NEW_TEST_OBLIQUE_SMALL/NEW_TEST_OBLIQUE_SMALL	2 1_Riemann_exact			oblique_periodic
@@ -40,9 +40,21 @@ read
 
 #./hydrocode.out RMI/RMI_81	RMI/RMI_81	2 1_Riemann_exact RMI
 #./hydrocode.out RMI/RMI_81	RMI/RMI_81	2 2_GRP		  RMI
-./hydrocode.out RMI/RMI_321	RMI/RMI_321	2 1_Riemann_exact RMI
+#./hydrocode.out RMI/RMI_321	RMI/RMI_321	2 1_Riemann_exact RMI
 #./hydrocode.out RMI/RMI_321	RMI/RMI_321	2 2_GRP		  RMI
 
+#./hydrocode.out 2DSI/2DSI_1281	2DSI_1281/2DSI_1281	2 1_Riemann_exact RMI
+#nohup ./hydrocode.out 2DSI/2DSI_A0K1	2DSI/2DSI_A0K1_fix	2 1_Riemann_exact RMI &
+#nohup ./hydrocode.out 2DSI/2DSI_A8K1	2DSI/2DSI_A8K1_fix	2 1_Riemann_exact RMI &
+#nohup ./hydrocode.out 2DSI/2DSI_A16K1	2DSI/2DSI_A16K1_fix	2 1_Riemann_exact RMI &
+#nohup ./hydrocode.out 2DSI/2DSI_A20K1	2DSI/2DSI_A20K1_fix	2 1_Riemann_exact RMI &
+#nohup ./hydrocode.out 2DSI/2DSI_A40K1	2DSI/2DSI_A40K1_fix	2 1_Riemann_exact RMI &
+#nohup ./hydrocode.out 2DSI/2DSI_A80K1	2DSI/2DSI_A80K1_fix	2 1_Riemann_exact RMI &
+#nohup ./hydrocode.out 2DSI/2DSI_A200K1 2DSI/2DSI_A200K1_fix	2 1_Riemann_exact RMI &
+
+#./hydrocode.out Tangent_Discon_OBLIQUE	Tangent_Discon_OBLIQUE/Tangent_Discon_OBLIQUE_nofix	2 1_Riemann_exact Shear
 #./hydrocode.out 1D_Shock-interface	1D_Shock-interface/1D_Shock-interface	2 1_Riemann_exact free
 #./hydrocode.out 2M_interface	2M_interface/2M_interface	2 1_Riemann_exact free
-#./hydrocode.out Numerical_Failures	Numerical_Failures/Numerical_Failures	2 1_Riemann_exact free
+#./hydrocode.out 2M_interface_ST	2M_interface_ST/2M_interface_ST	2 1_Riemann_exact free
+#./hydrocode.out 2M_diff_P	2M_diff_P/2M_diff_P	2 1_Riemann_exact free
+./hydrocode.out Numerical_Failures	Numerical_Failures/Numerical_Failures	2 1_Riemann_exact free

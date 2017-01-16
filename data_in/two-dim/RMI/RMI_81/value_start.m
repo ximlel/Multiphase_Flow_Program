@@ -4,7 +4,7 @@ A=round((line-1)/16);  %amplitude (number of grid)
 K=1;  %wavenumber
 
 
-gamma=1.4;
+gamma = 1.35;%gamma=1.4;
 Ma=1.5;
 L_x=1/(column-1);
 L_y=2/(line-1);

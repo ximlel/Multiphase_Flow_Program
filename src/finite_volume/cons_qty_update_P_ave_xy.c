@@ -419,6 +419,15 @@ static int sub_cell_update
 
 	delta_U_e = P_sum - P_ave/(scv[cp[k][0]*12+1].gamma-1.0);
 
+/*
+	for (int j = 0; j < cp[k][0]*12+1; j++)
+		for (int i = j+1; i < cp[k][0]*12+1; i++)
+			delta_U_e += 0.5*(scv[j].vol/cv->vol[k]*scv[j].RHO)*(scv[i].vol/cv->vol[k]*scv[i].RHO)*((scv[j].U_qt-scv[i].U_qt)*(scv[j].U_qt-scv[i].U_qt) + (scv[j].V_qt-scv[i].V_qt)*(scv[j].V_qt-scv[i].V_qt))/scv[cp[k][0]*12+1].RHO;
+*/
+
+//	delta_U_e = 0.0;
+
+
 	cv->U_rho[k] = scv[cp[k][0]*12+1].U_rho;
 	cv->U_e[k]   = scv[cp[k][0]*12+1].U_e - delta_U_e;
 	cv->U_u[k]   = scv[cp[k][0]*12+1].U_u;
@@ -426,7 +435,7 @@ static int sub_cell_update
 	cv->U_gamma[k] = scv[cp[k][0]*12+1].U_gamma;
 	if ((int)config[2] == 2)
 		cv->U_phi[k] = scv[cp[k][0]*12+1].U_phi;
-	cv->delta_U_e[k] += delta_U_e;
+	cv->delta_U_e[k] = scv[cp[k][0]*12+1].delta_U_e + delta_U_e;
 	
 	return 1;	
 }

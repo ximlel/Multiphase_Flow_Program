@@ -1,7 +1,7 @@
 line=1;
-column=1600;
-interface=800;
-shock=160;
+column=400;
+interface=200;
+shock=40;
 
 rho_1=1
 u_1=0
