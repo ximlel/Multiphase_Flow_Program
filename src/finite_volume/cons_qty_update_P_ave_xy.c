@@ -408,16 +408,15 @@ static int sub_cell_update
 		}
 
 	double delta_U_e = 0.0;
-	double P_ave, P_sum = 0.0, denom = 0.0;
+	double P_ave = 0.0, e_sum = 0.0;
 	
 	for (int j = 0; j < cp[k][0]*12+1; j++)
 		{					
-			P_sum += scv[j].vol/cv->vol[k]*scv[j].P/(scv[j].gamma-1.0);
-			denom += scv[j].vol/cv->vol[k]/(scv[j].gamma-1.0);
+			e_sum += scv[j].vol/cv->vol[k]*scv[j].P/(scv[j].gamma-1.0);
+			P_ave += scv[j].vol/cv->vol[k]*scv[j].P;
 		}
-	P_ave = P_sum/denom;
 
-	delta_U_e = P_sum - P_ave/(scv[cp[k][0]*12+1].gamma-1.0);
+	delta_U_e = e_sum - P_ave/(scv[cp[k][0]*12+1].gamma-1.0);
 
 /*
 	for (int j = 0; j < cp[k][0]*12+1; j++)
